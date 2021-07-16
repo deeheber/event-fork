@@ -6,75 +6,12 @@ Resources:
     Properties:
       TopicName: !Sub ${AWS::StackName}-Topic
       Subscription:
-        - Endpoint: !GetAtt LogQueue.Arn
+        - Endpoint: !GetAtt ChatNotificationQueue.Arn
           Protocol: sqs
         - Endpoint: !GetAtt MailingListQueue.Arn
           Protocol: sqs
         - Endpoint: !GetAtt AnalyticsQueue.Arn
           Protocol: sqs
-  LogQueue:
-    Type: AWS::SQS::Queue
-    Properties:
-      KmsMasterKeyId: alias/aws/sqs
-      MessageRetentionPeriod: 345600
-      RedrivePolicy:
-        deadLetterTargetArn: !GetAtt LogDLQ.Arn
-        maxReceiveCount: 5
-  TopicToLogQueuePermission:
-    Type: AWS::SQS::QueuePolicy
-    Properties:
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: sns.amazonaws.com
-            Action: sqs:SendMessage
-            Resource: !GetAtt LogQueue.Arn
-            Condition:
-              ArnEquals:
-                aws:SourceArn: !Ref Topic
-      Queues:
-        - !Ref LogQueue
-  LogFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: !Sub ${AWS::StackName}-LogFunction
-      Description: !Sub
-        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
-        - ResourceName: LogFunction
-      CodeUri: src/LogFunction
-      Handler: index.handler
-      Runtime: nodejs14.x
-      MemorySize: 3008
-      Timeout: 30
-      Tracing: Active
-      Policies:
-        - AWSXrayWriteOnlyAccess
-        - DynamoDBCrudPolicy:
-            TableName: !Ref LogTable
-      Events:
-        LogQueue:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt LogQueue.Arn
-            BatchSize: 1
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref LogTable
-          TABLE_ARN: !GetAtt LogTable.Arn
-  LogTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      BillingMode: PAY_PER_REQUEST
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
-      StreamSpecification:
-        StreamViewType: NEW_AND_OLD_IMAGES
   AnalyticsQueue:
     Type: AWS::SQS::Queue
     Properties:
@@ -169,17 +106,62 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       KmsMasterKeyId: alias/aws/sqs
-      MessageRetentionPeriod: 345600
+      MessageRetentionPeriod: 1209600
   MailingListDLQ:
     Type: AWS::SQS::Queue
     Properties:
       KmsMasterKeyId: alias/aws/sqs
-      MessageRetentionPeriod: 345600
-  LogDLQ:
+      MessageRetentionPeriod: 1209600
+  ChatNotificationQueue:
     Type: AWS::SQS::Queue
     Properties:
       KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 345600
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt ChatNotificationDLQ.Arn
+        maxReceiveCount: 5
+  TopicToChatNotificationQueuePermission:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: sns.amazonaws.com
+            Action: sqs:SendMessage
+            Resource: !GetAtt ChatNotificationQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref Topic
+      Queues:
+        - !Ref ChatNotificationQueue
+  ChatNotificationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${AWS::StackName}-ChatNotificationFunctio
+      Description: !Sub
+        - Stack ${StackTagName} Environment ${EnvironmentTagName} Function ${ResourceName}
+        - ResourceName: ChatNotificationFunction
+      CodeUri: src/ChatNotificationFunction
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 3008
+      Timeout: 30
+      Tracing: Active
+      Policies:
+        - AWSXrayWriteOnlyAccess
+      Events:
+        ChatNotificationQueue:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt ChatNotificationQueue.Arn
+            BatchSize: 1
+  ChatNotificationDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      KmsMasterKeyId: alias/aws/sqs
+      MessageRetentionPeriod: 1209600
 Parameters:
   StackTagName:
     Type: String
