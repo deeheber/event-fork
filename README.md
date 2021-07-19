@@ -1,14 +1,17 @@
-# Stackery Blank SAM Template
+# Event Fork Example
 
-This is a sample template for a serverless AWS Lambda application.
+## Purpose
+Link to blog post
 
-Here is an overview of the files:
+## Architecture
 
-```text
-.
-├── deployHooks/                       <-- Directory for storing deployment hooks
-├── .gitignore                         <-- Gitignore for Stackery
-├── .stackery-config.yaml              <-- Default CLI parameters for root directory
-├── README.md                          <-- This README file
-└── template.yaml                      <-- SAM infrastructure-as-code template
-```
+## Existing Pipelines
+
+## Adding a New Pipeline
+
+## Testing without a "Frontend"
+
+## Extra Things to Keep in Mind
+- Parameters/secrets for 3rd party API tokens/creds etcs
+- DLQ redrive
+- SQS is "at least once" delivery
