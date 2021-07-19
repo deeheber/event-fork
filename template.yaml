@@ -5,13 +5,34 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: !Sub ${AWS::StackName}-Topic
-      Subscription:
-        - Endpoint: !GetAtt ChatNotificationQueue.Arn
-          Protocol: sqs
-        - Endpoint: !GetAtt MailingListQueue.Arn
-          Protocol: sqs
-        - Endpoint: !GetAtt AnalyticsQueue.Arn
-          Protocol: sqs
+  AnalyticsQueueSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn: !Ref Topic
+      Endpoint: !GetAtt AnalyticsQueue.Arn
+      FilterPolicy:
+        event:
+          - signup
+          - login
+  MailingListQueueSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn: !Ref Topic
+      Endpoint: !GetAtt MailingListQueue.Arn
+      FilterPolicy:
+        event:
+          - signup
+  ChatNotificationQueueSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn: !Ref Topic
+      Endpoint: !GetAtt ChatNotificationQueue.Arn
+      FilterPolicy:
+        event:
+          - signup
   AnalyticsQueue:
     Type: AWS::SQS::Queue
     Properties:
