@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Resources:
   Topic:
@@ -36,16 +36,15 @@ Resources:
   AnalyticsQueue:
     Type: AWS::SQS::Queue
     Properties:
-      KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 345600
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt AnalyticsDLQ.Arn
-        maxReceiveCount: 5
+        maxReceiveCount: 3
   TopicToAnalyticsQueuePermission:
     Type: AWS::SQS::QueuePolicy
     Properties:
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
@@ -81,16 +80,15 @@ Resources:
   MailingListQueue:
     Type: AWS::SQS::Queue
     Properties:
-      KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 345600
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt MailingListDLQ.Arn
-        maxReceiveCount: 5
+        maxReceiveCount: 3
   TopicToMailingListQueuePermission:
     Type: AWS::SQS::QueuePolicy
     Properties:
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
@@ -126,21 +124,18 @@ Resources:
   AnalyticsDLQ:
     Type: AWS::SQS::Queue
     Properties:
-      KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 1209600
   MailingListDLQ:
     Type: AWS::SQS::Queue
     Properties:
-      KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 1209600
   ChatNotificationQueue:
     Type: AWS::SQS::Queue
     Properties:
-      KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 345600
       RedrivePolicy:
         deadLetterTargetArn: !GetAtt ChatNotificationDLQ.Arn
-        maxReceiveCount: 5
+        maxReceiveCount: 3
   TopicToChatNotificationQueuePermission:
     Type: AWS::SQS::QueuePolicy
     Properties:
@@ -181,7 +176,6 @@ Resources:
   ChatNotificationDLQ:
     Type: AWS::SQS::Queue
     Properties:
-      KmsMasterKeyId: alias/aws/sqs
       MessageRetentionPeriod: 1209600
 Parameters:
   StackTagName:
