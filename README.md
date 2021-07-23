@@ -4,10 +4,20 @@
 Link to blog post
 
 ## Architecture
-- High level diagram
-- SNS filtering overview
-- List out current pipelines
-- How to add/remove pipelines
+TODO: add screenshot of infra overview here
+
+This repo is designed to be used as a starter template to set up your own event-driven forks. It starts with an SNS topic that fans out into various SQS queues that then feed into a (currently unfinished) function that performs all of the work needed to respond to that specific event.
+
+Current forks (queue => function) are Analytics, MailingList, and ChatNotifications. You can add or remove these forks as you see fit.
+
+Each queue subscribes to the SNS topic and the `FilterPolicy` determines which queue(s) receive the event. Currently it is set up to filter on the SNS message's `MessageAttributes` `event` key value as follows:
+
+`{ "event": "signup" }` forwards the event to Analytics, MailingList, and ChatNotifications forks
+`{ "event": "login" }` forwards the event to the Analytics fork
+
+If the `MessageAttributes` field on the original SNS message does not match either, then nothing happens.
+
+You can go further and do more complex SNS topic filtering if you'd like. Check out the docs [here](https://docs.aws.amazon.com/sns/latest/dg/sns-message-filtering.html)
 
 ## Directions to Run
 - Install the following (if you don't have it yet)
@@ -27,10 +37,13 @@ Steps to use the script
 - cd `tools`
 - `npm install`
 - Update the inline TODOs in the `index.js` file
-- `npm run send` will send a message to the SNS topic Arn you specified
+- `npm run send` will send a message to the SNS topic arn you specified
 
+The example code will send anything with message attribute `{ event: { DataType: "String", StringValue: "signup" } }` to the Analytics, MailingList, and ChatNotifications queues. Message attribute `{ event: { DataType: "String", StringValue: "login" } }` to the Analytics queue. You can update what attributes filter to where via editing the `template.yaml` under `FilterPolicy` for each topic subscription.
 
 ## Extra Things to Keep in Mind
+- You'll need to add your business logic to the functions under `/src`
 - It's probably a good idea to use the [AWS secrets manager](https://aws.amazon.com/secrets-manager/) to manage 3rd party API tokens/creds etcs
 - Each queue in this stack has a designated "Dead Letter Queue" (DLQ for short) in which the event will be tried three times and then failed messages will be sent to the corresponding DLQ. It's possibly to do this via an SNS DLQ as well. Check out [this blog post](https://www.danielleheberling.xyz/blog/dlq-messages/) if you need help setting up a way to retry (or redrive) the failed events.
 - SQS standard queues "at least once" delivery, so if your events need to have "exactly once" delivery you'll need to write your function code to handle this or swap out the queues in the template with FIFO queues.
+- It is possible to do a "fan out" architecture that responds to events via EventBridge instead of SNS. EventBridge does have a lower limit of how many targets per rule you can have.
