@@ -1,10 +1,12 @@
 # Event Fork Example
 
 ## Purpose
-Link to blog post
+Check out this [blog post](https://www.danielleheberling.xyz/blog/event-driven-background-processes/) for more details.
 
 ## Architecture
-TODO: add screenshot of infra overview here
+
+![event-driven](https://user-images.githubusercontent.com/12616554/132954599-2bd928ad-66df-461f-9cf8-b66c5c28684c.png)
+
 
 This repo is designed to be used as a starter template to set up your own event-driven forks. It starts with an SNS topic that fans out into various SQS queues that then feed into a (currently unfinished) function that performs all of the work needed to respond to that specific event.
 
