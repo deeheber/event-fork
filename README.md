@@ -1,7 +1,7 @@
 # Event Fork Example
 
 ## Purpose
-Check out this [blog post](https://www.danielleheberling.xyz/blog/event-driven-background-processes/) for more details.
+Check out this [blog post](https://dev.to/aws-builders/event-driven-background-processes-55li) for more details.
 
 ## Architecture
 
