@@ -25,10 +25,10 @@ You can go further and do more complex SNS topic filtering if you'd like. Check 
 - Install the following (if you don't have it yet)
   - [Node](https://nodejs.org/) at least version 14
   - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
-  - [Stackery](https://www.stackery.io/)
+  - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
+
 - Clone or download the repo code
-- Import and deploy the stack via Stackery. Getting started directions [here](https://docs.stackery.io/docs/using-stackery/introduction/). TL;DR sign up for free account > create a stack and an environment > deploy.
-  - Note: this is also a valid [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html) template, so you can also use [the SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html) for deploying if you prefer
+- Deploy the stack using the [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 - Send messages to the SNS topic either via the console, a client, or by following the manual testing steps in the "Testing without a Frontend" section below
 
 ## Testing without a "Frontend"
