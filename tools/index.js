@@ -1,12 +1,6 @@
-const AWS = require('aws-sdk');
-const credentials = new AWS.SharedIniFileCredentials({
-  // TODO: replace with your profile
-  // Note you can remove all of the credential stuff if using the 'default' profile
-  profile: 'personal'
-});
-AWS .config.credentials = credentials;
+const { SNSClient, PublishCommand } = require("@aws-sdk/client-sns");
 // TODO: replace with your region
-const SNS = new AWS.SNS({ region: 'us-west-2' });
+const client = new SNSClient({ region: 'add your region here' });
 
 const message = {
   // TODO: add contents of the message here
@@ -20,15 +14,18 @@ const params = {
     event: {
       DataType: 'String',
       // TODO: add your message attribute value here
+      // login and signup are the default supplied options, but you can update the template for more
       StringValue: 'login'
     }
   },
   Message: JSON.stringify(message)
 };
 
+const command = new PublishCommand(params);
+
 (async function main () {
   try {
-    const result = await SNS.publish(params).promise();
+    const result = await client.send(command);
     console.log(`SUCCESS: ${JSON.stringify(result, null, 2)}`);
   } catch (err) {
     console.log('AN ERROR OCURRED: ', err);
