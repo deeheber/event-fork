@@ -1,5 +1,6 @@
 # local build directories
 .aws-sam
+samconfig.toml
 
 # dependencies
 node_modules

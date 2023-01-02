@@ -23,7 +23,7 @@ You can go further and do more complex SNS topic filtering if you'd like. Check 
 
 ## Directions to Run
 - Install the following (if you don't have it yet)
-  - [Node](https://nodejs.org/) at least version 14
+  - [Node](https://nodejs.org/) at least version 18
   - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
   - [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 
