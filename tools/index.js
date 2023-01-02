@@ -13,12 +13,14 @@ const message = {
 };
 
 const params = {
+  // TODO: add your topic ARN here
+  // can be found in the SNS console or the CloudFormation stack outputs
   TopicArn: 'add topic ARN here',
   MessageAttributes: {
     event: {
       DataType: 'String',
       // TODO: add your message attribute value here
-      StringValue: 'your message attribute value here'
+      StringValue: 'login'
     }
   },
   Message: JSON.stringify(message)
