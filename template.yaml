@@ -65,7 +65,7 @@ Resources:
         - ResourceName: AnalyticsFunction
       CodeUri: src/AnalyticsFunction
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Architectures:
         - arm64
       MemorySize: 3008
@@ -111,7 +111,7 @@ Resources:
         - ResourceName: MailingListFunction
       CodeUri: src/MailingListFunction
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Architectures:
         - arm64
       MemorySize: 3008
@@ -144,7 +144,7 @@ Resources:
     Type: AWS::SQS::QueuePolicy
     Properties:
       PolicyDocument:
-        Version: '2012-10-17'
+        Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
@@ -165,7 +165,7 @@ Resources:
         - ResourceName: ChatNotificationFunction
       CodeUri: src/ChatNotificationFunction
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs20.x
       Architectures:
         - arm64
       MemorySize: 3008
@@ -191,7 +191,6 @@ Parameters:
     Type: String
     Description: Environment Name
 Outputs:
-  TopicArn: 
+  TopicArn:
     Description: The ARN of the topic
     Value: !Ref Topic
-
